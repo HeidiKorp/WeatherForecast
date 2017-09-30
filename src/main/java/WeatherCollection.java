@@ -1,24 +1,20 @@
-public class WeatherCollection {
+package weatherProgram;
 
+public class WeatherCollection implements Weather {
+
+    private String jsonWeatherData;
+
+    @Override
     public WeatherReport getCurrentWeather(WeatherRequest request) {
-        // TODO Get the object of WeatherRequest and add its parameters into the URL. Connect the URL.
+        // TODO Get the object of weatherProgram.WeatherRequest and add its parameters into the URL. Connect the URL.
         // TODO Get the lowest and highest temperature of the current day.
-        return null;
+        return new WeatherReport(null);
     }
 
-    public WeatherReport getDay1Weather(WeatherRequest request) {
-        // TODO Get the lowest and highest temperature of day 1 day.
-        return null;
+    @Override
+    public WeatherReport getForecastWeather(WeatherRequest request) {
+        // TODO Get the lowest and highest temp of the 3 next days.
+        return new WeatherReport(null);
     }
-
-    public WeatherReport getDay2Weather(WeatherRequest request) {
-        // TODO Get the lowest and highest temperature of day 2 day.
-        return null;
-    }
-
-    public WeatherReport getDay3Weather(WeatherRequest request) {
-        // TODO Get the lowest and highest temperature of day 3 day.
-        return null;
-    }
-
 }
+
