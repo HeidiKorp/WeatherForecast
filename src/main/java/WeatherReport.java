@@ -1,37 +1,54 @@
-import java.util.Locale;
+package weatherProgram;
 
 public class WeatherReport {
 
-    public WeatherReport() {
+    public WeatherReport(String jsonWeatherData) {
         // TODO Compile a report using other methods to get necessary data.
     }
 
-    public long getHighestTemperature() {
+    public float getHighestTemperature() {
         return 0;
     }
 
-    public long getLowestTemperature() {
+    public float getLowestTemperature() {
         return 0;
     }
 
     public String getCoordinates() {
-        // TODO Coordinates format: xxx.yyy
-        return null;
+        return String.format("%.0f:%.0f", getLatitude(), getLongitude());
     }
 
     public String getCityName() {
         return null;
     }
 
-    public Locale getCountry() {
+    public String getCountry() {
         return null;
     }
 
-    public long getLatitude() {
+    public float getLatitude() {
         return 0;
     }
 
-    public long getAltitude() {
+    public float getLongitude() {
         return 0;
+    }
+
+    public float changeTempSystem(String system, float temp) {
+        float changedTemp = 0;
+        if (system.equals("celsius")) {
+            // TODO change temp into fahrenheit system;
+            changedTemp = 0;
+        } else if (system.equals("fahreinheit")) {
+            changedTemp = 0;
+        } else if (system.equals("kelvin")) {
+            changedTemp = 0;
+        }
+        return changedTemp;
+    }
+
+    public String getReport() {
+        // TODO Compile the full report;
+        return null;
     }
 }
