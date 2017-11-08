@@ -2,15 +2,17 @@ package weatherProgram;
 
 import dataParser.DataExtractor;
 import dataParser.ReportCompiler;
+import weatherSpecifier.CurrentWeather;
 
 public class WeatherReport {
 
     private String weatherData;
     private DataExtractor extractor;
+    private CurrentWeather currentWeather;
 
-    public WeatherReport(String jsonWeatherData) {
+    public WeatherReport(String jsonWeatherData, CurrentWeather currentWeather) {
         this.weatherData = jsonWeatherData;
-        this.extractor = new DataExtractor(this);
+        extractor = new DataExtractor(this, currentWeather);
     }
 
     public double getHighestTemperature() {

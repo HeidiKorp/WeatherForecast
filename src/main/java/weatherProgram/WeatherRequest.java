@@ -1,6 +1,9 @@
 package weatherProgram;
 
 
+import weatherSpecifier.CurrentWeather;
+import weatherSpecifier.ForecastWeather;
+
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -11,25 +14,24 @@ import java.net.URLConnection;
  */
 public class WeatherRequest {
 
-    private final String CITY;
-    private final String COUNTRY;
+    private CurrentWeather currentWeather;
     String filename = "";
 
     public WeatherRequest(String city) {
-        CITY = city;
-        COUNTRY = null;
+         currentWeather = new CurrentWeather(city);
     }
 
     public WeatherRequest(String city, String country) {
-        CITY = city;
-        COUNTRY = country;
+        currentWeather = new ForecastWeather(city, country);
     }
 
-    // Use different constructors so if you add EE, it means you have to request forecast.
+    public CurrentWeather getCurrentWeather() {
+        return currentWeather;
+    }
+
     public void writeRequestedDataIntoFile(String fileName) throws IOException {
         try {
-            this.filename = fileName;
-            URL website = new URL(this.compileURL(this.CITY));
+            URL website = new URL(currentWeather.compileURL());
             URLConnection connection = website.openConnection();
             FileWriter writer = new FileWriter(fileName);
             BufferedWriter bufferedWriter = new BufferedWriter(writer);
@@ -56,16 +58,9 @@ public class WeatherRequest {
         }
     }
 
-    private String compileURL(String city) {
-        return "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&APPID=7d1fdfe09df058c46a81bb575c22ac96";
-    }
 
-    private String compileURL(String city, String country) {
-        return null;
-    }
 
-    public String getCity() {
-        return CITY;
-    }
+
+
 
 }

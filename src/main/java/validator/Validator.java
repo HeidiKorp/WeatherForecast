@@ -18,7 +18,7 @@ public class Validator {
     public Validator(String city, String countryCode, String tempSystem) {
         repository = new WeatherCollection();
         request = new WeatherRequest(city);
-        report = repository.getCurrentWeather(request);
+        report = repository.getWeather(request);
     }
 
     public void validateLowestTempIsSmallerThanHighestTemp(float highestTemp, float lowestTemp) {

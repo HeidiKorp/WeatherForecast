@@ -2,8 +2,8 @@ package dataParser;
 
 public class ChangeTempSystem {
 
-    public float changeTempSystem(String system, float temp) {
-        float changedTemp = 0;
+    public double changeTempSystem(String system, double temp) {
+        double changedTemp = 0;
         if (system.equals("celsius")) {
             // TODO change temp into fahrenheit system;
             changedTemp = 0;
