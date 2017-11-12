@@ -3,45 +3,102 @@ package dataParser;
 import com.google.gson.Gson;
 import dataContainer.DataContainer;
 import weatherProgram.WeatherReport;
-import weatherSpecifier.CurrentWeather;
-import weatherSpecifier.ForecastWeather;
+import weatherSpecifier.CurrentWeatherURLCompiler;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class DataExtractor {
 
-    private String weatherData;
-    private Gson gson;
-    private DataContainer parsedData;
-    private CurrentWeather currentWeather;
+    private DataContainer parsedCurrentData;
+    private DataContainer parsedForecastData;
+    private CurrentWeatherURLCompiler currentWeather;
 
-    public DataExtractor(WeatherReport report, CurrentWeather currentWeather) {
-        this.weatherData = report.getWeatherData();
-        gson = new Gson();
-        parsedData = gson.fromJson(weatherData, DataContainer.class);
-        this.currentWeather = currentWeather;
+    public DataExtractor(WeatherReport report) {
+        String currentWeatherData = report.getCurrentWeatherData();
+        String forecastWeatherData = report.getForecastWeatherData();
+        Gson gson = new Gson();
+        parsedCurrentData = gson.fromJson(currentWeatherData, DataContainer.class);
+        parsedForecastData = gson.fromJson(forecastWeatherData, DataContainer.class);
     }
 
-    public double getLongitude() {
-        if (currentWeather instanceof ForecastWeather) {
-            return Double.parseDouble(parsedData.city.coord.lon);
-        } else {
-            return Double.parseDouble(parsedData.coord.lon);
+    public double getLongitude() { return parsedCurrentData.coord.lon; }
+
+    public double getLatitude() { return parsedCurrentData.coord.lat; }
+
+    public String getCityName() { return parsedCurrentData.name; }
+
+    public String getCountry() { return parsedCurrentData.sys.country; }
+
+    public double getCurrentTemperature() { return parsedCurrentData.main.temp; }
+
+    public List<Double> getMinTemperature() {
+        List<Double> temporaryMinTemp = new ArrayList<>();
+        List<Double> day1MinTemps = new ArrayList<>();
+        List<Double> day2MinTemps = new ArrayList<>();
+        List<Double> day3MinTemps = new ArrayList<>();
+        List<Double> minTemps = new ArrayList<>();
+
+        parsedForecastData.list.stream()
+                .map(temp -> temp.main.temp_min)
+                .forEach(temporaryMinTemp::add);
+
+        for (int index = 0; index < 8; index++) {
+            day1MinTemps.add(temporaryMinTemp.get(index));
         }
-    }
-
-
-    public double getLatitude() {
-        if (currentWeather instanceof ForecastWeather) {
-            return Double.parseDouble(parsedData.city.coord.lat);
-        } else {
-            return Double.parseDouble(parsedData.coord.lat);
+        for (int index = 8; index < 16; index++) {
+            day2MinTemps.add(temporaryMinTemp.get(index));
         }
+        for (int index = 16; index < 24; index++) {
+            day3MinTemps.add(temporaryMinTemp.get(index));
+        }
+
+        minTemps.add(day1MinTemps.stream()
+                .collect(Collectors.summarizingDouble(Double::doubleValue))
+                .getMin());
+        minTemps.add(day2MinTemps.stream()
+                .collect(Collectors.summarizingDouble(Double::doubleValue))
+                .getMin());
+        minTemps.add(day3MinTemps.stream()
+                .collect(Collectors.summarizingDouble(Double::doubleValue))
+                .getMin());
+
+        return minTemps;
     }
 
+    public List<Double> getMaxTemperature() {
+        List<Double> temporaryMaxTemp = new ArrayList<>();
+        List<Double> day1MaxTemps = new ArrayList<>();
+        List<Double> day2MaxTemps = new ArrayList<>();
+        List<Double> day3MaxTemps = new ArrayList<>();
+        List<Double> maxTemps = new ArrayList<>();
 
-    public double getCurrentTemperature() { return Double.parseDouble(parsedData.main.temp); }
+        parsedForecastData.list.stream()
+                .map(temp -> temp.main.temp_max)
+                .forEach(temporaryMaxTemp::add);
 
-    public double getMinTemperature() { return Double.parseDouble(parsedData.main.temp_min); }
+        for (int index = 0; index < 8; index++) {
+            day1MaxTemps.add(temporaryMaxTemp.get(index));
+        }
+        for (int index = 8; index < 16; index++) {
+            day2MaxTemps.add(temporaryMaxTemp.get(index));
+        }
+        for (int index = 16; index < 24; index++) {
+            day3MaxTemps.add(temporaryMaxTemp.get(index));
+        }
 
-    public double getMaxTemperature() { return Double.parseDouble(parsedData.main.temp_max); }
+        maxTemps.add(day1MaxTemps.stream()
+                .collect(Collectors.summarizingDouble(Double::doubleValue))
+                .getMax());
+        maxTemps.add(day2MaxTemps.stream()
+                .collect(Collectors.summarizingDouble(Double::doubleValue))
+                .getMax());
+        maxTemps.add(day3MaxTemps.stream()
+                .collect(Collectors.summarizingDouble(Double::doubleValue))
+                .getMax());
+
+        return maxTemps;
+    }
 
 }

@@ -2,26 +2,27 @@ package weatherProgram;
 
 import dataParser.DataExtractor;
 import dataParser.ReportCompiler;
-import weatherSpecifier.CurrentWeather;
+
+import java.util.List;
 
 public class WeatherReport {
 
-    private String weatherData;
+    private String currentWeatherData;
+    private String forecastWeatherData;
     private DataExtractor extractor;
-    private CurrentWeather currentWeather;
 
-    public WeatherReport(String jsonWeatherData, CurrentWeather currentWeather) {
-        this.weatherData = jsonWeatherData;
-        extractor = new DataExtractor(this, currentWeather);
+
+    public WeatherReport(String currentWeatherData, String forecastWeatherData) {
+        this.currentWeatherData = currentWeatherData;
+        this.forecastWeatherData = forecastWeatherData;
+        extractor = new DataExtractor(this);
     }
 
-    public double getHighestTemperature() {
-        return extractor.getMaxTemperature();
-    }
 
-    public double getLowestTemperature() {
-        return extractor.getMinTemperature();
-    }
+
+    public List<Double> getHighestTemperatures() { return extractor.getMaxTemperature(); }
+
+    public List<Double> getLowestTemperatures() { return extractor.getMinTemperature(); }
 
     public double getCurrentTemperature() {
         return extractor.getCurrentTemperature();
@@ -30,15 +31,11 @@ public class WeatherReport {
     public String getCoordinates() {
         return String.format("%.2f:%.2f", getLatitude(), getLongitude());
     }
-//
-//    public String getCityName() {
-//        return null;
-//    }
-//
-//    public String getCountry() {
-//        return null;
-//    }
-//
+
+    public String getCityName() { return extractor.getCityName(); }
+
+    public String getCountry() { return extractor.getCountry(); }
+
     public double getLatitude() {
         return extractor.getLatitude();
     }
@@ -47,7 +44,9 @@ public class WeatherReport {
         return extractor.getLongitude();
     }
 
-    public String getWeatherData() { return weatherData; }
+    public String getCurrentWeatherData() { return currentWeatherData; }
+
+    public String getForecastWeatherData() { return forecastWeatherData; }
 
     public String getReport(String fileName) {
         ReportCompiler compiler = new ReportCompiler();

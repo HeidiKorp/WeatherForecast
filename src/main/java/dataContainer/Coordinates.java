@@ -2,7 +2,7 @@ package dataContainer;
 
 public class Coordinates {
 
-    public String lon;
-    public String lat;
+    public double lon;
+    public double lat;
 
 }

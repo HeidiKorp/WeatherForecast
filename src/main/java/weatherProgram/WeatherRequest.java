@@ -1,9 +1,10 @@
 package weatherProgram;
 
 
-import weatherSpecifier.CurrentWeather;
-import weatherSpecifier.ForecastWeather;
+import weatherSpecifier.CurrentWeatherURLCompiler;
+import weatherSpecifier.ForecastWeatherURLCompiler;
 
+import javax.swing.text.StyledEditorKit;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -14,52 +15,33 @@ import java.net.URLConnection;
  */
 public class WeatherRequest {
 
-    private CurrentWeather currentWeather;
-    String filename = "";
+    private CurrentWeatherURLCompiler currentWeather;
+    private CurrentWeatherURLCompiler forecastWeather;
+    //String filename = "";
+    private String city;
+    private String country;
 
-    public WeatherRequest(String city) {
-         currentWeather = new CurrentWeather(city);
-    }
 
     public WeatherRequest(String city, String country) {
-        currentWeather = new ForecastWeather(city, country);
+        this.city = city;
+        this.country = country;
+        this.currentWeather = new CurrentWeatherURLCompiler(city);
+        this.forecastWeather = new ForecastWeatherURLCompiler(city, country);
+        CityNameToFileWriter writer = new CityNameToFileWriter();
+        writer.writeCityNameIntoFile(city, "C:\\Users\\korph\\IdeaProjects\\Weather\\src\\main\\java\\input.txt");
     }
 
-    public CurrentWeather getCurrentWeather() {
-        return currentWeather;
+    public String getCity() { return city; }
+
+    public String getCountry() { return country; }
+
+    public String getCurrentWeatherData() throws IOException {
+        return new ApiInfoGetter().getApiInfo(currentWeather.compileURL());
     }
 
-    public void writeRequestedDataIntoFile(String fileName) throws IOException {
-        try {
-            URL website = new URL(currentWeather.compileURL());
-            URLConnection connection = website.openConnection();
-            FileWriter writer = new FileWriter(fileName);
-            BufferedWriter bufferedWriter = new BufferedWriter(writer);
-
-            BufferedReader in = new BufferedReader(
-                    new InputStreamReader(
-                            connection.getInputStream()));
-
-            StringBuilder response = new StringBuilder();
-            String inputLine;
-
-            while ((inputLine = in.readLine()) != null)
-                response.append(inputLine);
-
-            in.close();
-
-            bufferedWriter.write(response.toString());
-            bufferedWriter.close();
-            System.out.println(response.toString());
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public String getForecastWeatherData() throws IOException {
+        return new ApiInfoGetter().getApiInfo(forecastWeather.compileURL());
     }
-
-
-
 
 
 

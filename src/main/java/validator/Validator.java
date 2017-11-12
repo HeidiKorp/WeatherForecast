@@ -1,9 +1,10 @@
 package validator;
 
-import weatherProgram.WeatherCollection;
+import weatherProgram.WeatherReportMaker;
 import weatherProgram.WeatherReport;
 import weatherProgram.WeatherRequest;
 
+import java.io.IOException;
 import java.util.Formatter;
 
 import static org.junit.Assert.fail;
@@ -11,46 +12,40 @@ import static org.junit.Assert.fail;
 
 public class Validator {
 
-    private WeatherCollection repository;
+    private WeatherReportMaker repository;
     private WeatherRequest request;
     private WeatherReport report;
 
-    public Validator(String city, String countryCode, String tempSystem) {
-        repository = new WeatherCollection();
-        request = new WeatherRequest(city);
-        report = repository.getWeather(request);
+    public Validator(String city, String countryCode) {
+        repository = new WeatherReportMaker();
+        request = new WeatherRequest(city, countryCode);
+        //report = repository.getWeather(request);
     }
 
-    public void validateLowestTempIsSmallerThanHighestTemp(float highestTemp, float lowestTemp) {
+    public void validateLowestTempIsSmallerThanHighestTemp(double highestTemp, double lowestTemp) {
         try {
             if (highestTemp < lowestTemp) {
-                throw new Exception();
+                throw new Exception("Fail: highest temperature is bigger than lowest temperature.");
             }
-        } catch (Exception e) {
-            fail("Fail: highest temperature is bigger than lowest temperature.");
-        }
-    }
-
-    public void validateTemperatureIsInCorrectRange(String tempSystem, float highestTemp, float lowestTemp) {
-        try {
-            if (tempSystem.equals("celsius") && highestTemp > 60
-                    || tempSystem.equals("fahrenheit") && highestTemp > 160
-                    || tempSystem.equals("kelvin") && highestTemp > 350) {
-                throw new Exception("Error: highest temperature is too high.");
-
-            } else if (tempSystem.equals("celsius") && lowestTemp < -273
-                    || tempSystem.equals("fahrenheit") && lowestTemp < -460
-                    || tempSystem.equals("kelvin") && lowestTemp < 0) {
-                throw new Exception("Error: lowest temperature is too low.");
-            }
-
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            fail();
         }
     }
 
-    public void validateCoordinateRange(float latitude, float longitude) {
+    public void validateTemperatureIsInCorrectRange(double highestTemp, double lowestTemp) {
+        try {
+            if (highestTemp > 350) {
+                throw new Exception("Error: highest temperature is too high.");
+            } else if (lowestTemp < 0) {
+                throw new Exception("Error: lowest temperature is too low.");
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+
+        }
+    }
+
+    public void validateCoordinateRange(double latitude, double longitude) {
         try {
             if (latitude < -90) {
                 throw new Exception("Error: latitude is too small.");
@@ -63,27 +58,19 @@ public class Validator {
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            fail();
         }
     }
 
     public void validateCoordinateFormat(String coordinates) {
         Formatter formatter = new Formatter();
-        float nr = 33;
+        double nr = 33;
         try {
             if (!coordinates.matches("\\d+:\\d+")) {
-                throw new Exception();
+                String he = String.format("%.0f:%.0f", nr, nr);
+                throw new Exception("Coordinates should be in format " + he + ". Found " + coordinates);
             }
         } catch (Exception e) {
-            String he = String.format("%.0f:%.0f", nr, nr);
-            fail("Coordinates should be in format " + he + ". Found " + coordinates);
+            System.out.println(e.getMessage());
         }
-
     }
-
-    public void validateMeasurementSystem() {
-        // TODO validate if the response and request are in the same measurement system.
-    }
-
-
 }

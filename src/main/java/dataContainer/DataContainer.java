@@ -1,9 +1,15 @@
 package dataContainer;
 
+import dataContainer.forecastData.MainData;
+
+import java.util.List;
+
 public class DataContainer {
 
     public Coordinates coord;
-    public Main main;
-    public City city;
+    public MainData main;
+    public City sys;
+    public String name;
+    public List<MainData> list;
 
 }
