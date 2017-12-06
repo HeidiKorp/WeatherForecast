@@ -12,13 +12,12 @@ public class WeatherReport {
     private DataExtractor extractor;
 
 
-    public WeatherReport(String currentWeatherData, String forecastWeatherData) {
+    public WeatherReport(String currentWeatherData, String forecastWeatherData, DataExtractor extractor) {
         this.currentWeatherData = currentWeatherData;
         this.forecastWeatherData = forecastWeatherData;
-        extractor = new DataExtractor(this);
+        this.extractor = extractor;
+        extractor.parseFromJson(getCurrentWeatherData(), getForecastWeatherData());
     }
-
-
 
     public List<Double> getHighestTemperatures() { return extractor.getMaxTemperature(); }
 
@@ -29,7 +28,7 @@ public class WeatherReport {
     }
 
     public String getCoordinates() {
-        return String.format("%.2f:%.2f", getLatitude(), getLongitude());
+        return String.format("%.2f:%.2f", getLongitude(), getLatitude());
     }
 
     public String getCityName() { return extractor.getCityName(); }
@@ -48,8 +47,8 @@ public class WeatherReport {
 
     public String getForecastWeatherData() { return forecastWeatherData; }
 
-    public String getReport(String fileName) {
-        ReportCompiler compiler = new ReportCompiler();
-        return compiler.compileReport(this, fileName);
+    public void makeReport() {
+        new ReportCompiler().compileReport(this, getCityName() + ".txt", new InfoToFileWriter());
     }
+
 }

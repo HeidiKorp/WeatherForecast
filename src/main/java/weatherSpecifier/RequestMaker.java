@@ -1,5 +1,7 @@
 package weatherSpecifier;
 
+import weatherProgram.InfoToFileWriter;
+import weatherProgram.WeatherReportMaker;
 import weatherProgram.WeatherRequest;
 
 import java.io.BufferedReader;
@@ -12,22 +14,35 @@ public class RequestMaker {
 
     private String city;
     private String country;
+    private ConsoleReader reader;
 
-    public RequestMaker() {
-
+    public RequestMaker() throws IOException {
+        reader = new ConsoleReader().makeConsoleReader();
+        this.city = reader.getCity();
+        this.country = reader.getCountry();
+        validateConsoleInput(city, country);
     }
 
-    public RequestMaker(String city, String country) throws IOException {
+    RequestMaker(String city, String country) {
         this.city = city;
         this.country = country;
     }
 
-    public WeatherRequest makeRequest() {
-        if (city == null || country == null) {
-            return new WeatherRequest("Tallinn", "EE");
-        } else {
-            return new WeatherRequest(city, country);
+    void validateConsoleInput(String city, String country) {
+        if (city.isEmpty()) {
+            this.city = "Tallinn";
         }
-
+        if (country.isEmpty()) {
+            this.country = "EE";
+        }
     }
+
+    public void makeRequest() throws IOException {
+        new WeatherRequest(city, country, new CurrentWeatherURLCompiler(city),
+                new ForecastWeatherURLCompiler(city, country), new InfoToFileWriter(), new WeatherReportMaker());
+    }
+
+    public String getCity() { return city; }
+
+    public String getCountry() { return country; }
 }

@@ -10,6 +10,8 @@ public class ConsoleReader {
     private String city = "";
     private String country = "";
 
+    public ConsoleReader() { }
+
     public ConsoleReader(BufferedReader reader) throws IOException {
         setCity(reader);
         setCountry(reader);
@@ -31,6 +33,10 @@ public class ConsoleReader {
 
     public String getCountry() {
         return country;
+    }
+
+    public ConsoleReader makeConsoleReader() throws IOException {
+        return new ConsoleReader(new BufferedReader(new InputStreamReader(System.in)));
     }
 
 }

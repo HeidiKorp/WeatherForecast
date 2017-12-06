@@ -13,14 +13,17 @@ public class DataExtractor {
 
     private DataContainer parsedCurrentData;
     private DataContainer parsedForecastData;
-    private CurrentWeatherURLCompiler currentWeather;
 
-    public DataExtractor(WeatherReport report) {
-        String currentWeatherData = report.getCurrentWeatherData();
-        String forecastWeatherData = report.getForecastWeatherData();
-        Gson gson = new Gson();
-        parsedCurrentData = gson.fromJson(currentWeatherData, DataContainer.class);
-        parsedForecastData = gson.fromJson(forecastWeatherData, DataContainer.class);
+
+    public void parseFromJson(String currentData, String forecastData) {
+        validateData(currentData, forecastData);
+    }
+
+    private void validateData(String currentData, String forecastData) {
+        if (!currentData.isEmpty() && !forecastData.isEmpty()) {
+            parsedCurrentData = new FromJson().parseFromJson(currentData);
+            parsedForecastData = new FromJson().parseFromJson(forecastData);
+        }
     }
 
     public double getLongitude() { return parsedCurrentData.coord.lon; }
