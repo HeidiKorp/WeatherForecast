@@ -4,18 +4,23 @@ public class CurrentWeatherURLCompiler {
 
     static String CITY = "";
 
-    CurrentWeatherURLCompiler() { }
+    public CurrentWeatherURLCompiler() { }
 
     public CurrentWeatherURLCompiler(String city) {
         CITY = city;
     }
 
     public String compileURL() {
+        String url = "";
         try {
-            return "http://api.openweathermap.org/data/2.5/weather?q=" + CITY + "&APPID=7d1fdfe09df058c46a81bb575c22ac96";
+            url = "http://api.openweathermap.org/data/2.5/weather?q=" + CITY + "&APPID=7d1fdfe09df058c46a81bb575c22ac96";
+        } catch (NullPointerException e) {
+            System.out.println("No such data");
         } catch (Exception e) {
             System.out.println("Couldn't find data with this city name");
-            return "";
+            System.exit(0);
+            url = "";
         }
+        return url;
     }
 }

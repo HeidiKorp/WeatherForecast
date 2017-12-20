@@ -3,20 +3,18 @@ package weatherProgram;
 import dataParser.DataExtractor;
 import dataParser.ReportCompiler;
 
+import java.io.IOException;
 import java.util.List;
 
 public class WeatherReport {
 
-    private String currentWeatherData;
-    private String forecastWeatherData;
     private DataExtractor extractor;
+    private ReportCompiler compiler;
 
 
-    public WeatherReport(String currentWeatherData, String forecastWeatherData, DataExtractor extractor) {
-        this.currentWeatherData = currentWeatherData;
-        this.forecastWeatherData = forecastWeatherData;
+    public WeatherReport(DataExtractor extractor, ReportCompiler compiler) {
         this.extractor = extractor;
-        extractor.parseFromJson(getCurrentWeatherData(), getForecastWeatherData());
+        this.compiler = compiler;
     }
 
     public List<Double> getHighestTemperatures() { return extractor.getMaxTemperature(); }
@@ -43,12 +41,13 @@ public class WeatherReport {
         return extractor.getLongitude();
     }
 
-    public String getCurrentWeatherData() { return currentWeatherData; }
+    public void parseJson(String currentWeatherData, String forecastWeatherData) {
+        extractor.parseFromJson(currentWeatherData, forecastWeatherData);
+    }
 
-    public String getForecastWeatherData() { return forecastWeatherData; }
-
-    public void makeReport() {
-        new ReportCompiler().compileReport(this, getCityName() + ".txt", new InfoToFileWriter());
+    public void makeReport(String currentWeatherData, String forecastWeatherData) throws IOException {
+        parseJson(currentWeatherData, forecastWeatherData);
+        compiler.writeReportToFile(this, getCityName() + ".txt", new InfoToFileWriter());
     }
 
 }

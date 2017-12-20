@@ -1,24 +1,21 @@
-import weatherProgram.WeatherReportMaker;
-import weatherProgram.WeatherReport;
-import weatherProgram.WeatherRequest;
+import weatherProgram.WeatherRepository;
 import weatherSpecifier.ConsoleReader;
-import weatherSpecifier.RequestMaker;
+import weatherSpecifier.WeatherRequestMaker;
 
-import java.io.BufferedReader;
-import java.io.Console;
-import java.io.InputStreamReader;
+import java.io.IOException;
 
 public class Main {
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
 
-        RequestMaker maker = new RequestMaker();
-        //ConsoleReader reader = new ConsoleReader(new BufferedReader(new InputStreamReader(System.in)));
-        //RequestMaker maker = new RequestMaker(reader.getCity(), reader.getCountry());
-
-        maker.makeRequest();
-//        RequestMaker maker2 = new RequestMaker();
-//        maker2.makeRequest();
+        try {
+            WeatherRequestMaker maker = new WeatherRequestMaker(new ConsoleReader().makeConsoleReader(), new WeatherRepository());
+            maker.makeRequest();
+            WeatherRequestMaker maker2 = new WeatherRequestMaker(new ConsoleReader().makeConsoleReader(), new WeatherRepository());
+            maker2.makeRequest();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 }

@@ -9,12 +9,11 @@ public class InfoToFileWriter {
 
     private static String cities = "";
 
-    void writeCityIntoFile(String info, String filename) {
+    void writeCityIntoFile(String info, BufferedWriter writer) {
         try {
             addCity(info);
-            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(filename));
-            bufferedWriter.write(getCities());
-            bufferedWriter.close();
+            writer.write(getCities());
+            writer.close();
         } catch (NullPointerException e) {
             System.out.println("No file or no info");
         } catch (FileNotFoundException e) {
@@ -24,11 +23,10 @@ public class InfoToFileWriter {
         }
     }
 
-    public void writeWeatherIntoFile(String info, String filename) {
+    public void writeWeatherIntoFile(String info, BufferedWriter writer) {
         try {
-            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(filename));
-            bufferedWriter.write(info);
-            bufferedWriter.close();
+            writer.write(info);
+            writer.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

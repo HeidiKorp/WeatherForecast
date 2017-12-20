@@ -9,11 +9,16 @@ import java.net.MalformedURLException;
 
 public class ReportCompiler {
 
-    public String compileReport(WeatherReport report, String fileName, InfoToFileWriter writer) {
+    private String newReport;
+
+    public void writeReportToFile(WeatherReport report, String fileName, InfoToFileWriter writer) throws IOException {
         SourceToJson sourceArray = new SourceToJson(report.getCurrentTemperature(), report.getHighestTemperatures(),
                 report.getLowestTemperatures(), report.getCoordinates());
+        newReport = new Gson().toJson(sourceArray);
+        writer.writeWeatherIntoFile(newReport, new BufferedWriter(new FileWriter(fileName)));
+    }
 
-        writer.writeWeatherIntoFile(new Gson().toJson(sourceArray), fileName);
-        return new Gson().toJson(sourceArray);
+    public String getReport() {
+        return newReport;
     }
 }

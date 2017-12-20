@@ -11,8 +11,8 @@ import java.util.stream.Collectors;
 
 public class DataExtractor {
 
-    private DataContainer parsedCurrentData;
-    private DataContainer parsedForecastData;
+    private DataContainer parsedCurrentData = null;
+    private DataContainer parsedForecastData = null;
 
 
     public void parseFromJson(String currentData, String forecastData) {
@@ -23,6 +23,9 @@ public class DataExtractor {
         if (!currentData.isEmpty() && !forecastData.isEmpty()) {
             parsedCurrentData = new FromJson().parseFromJson(currentData);
             parsedForecastData = new FromJson().parseFromJson(forecastData);
+        } else {
+            System.out.println("Couldn't find weather data");
+            System.exit(0);
         }
     }
 
